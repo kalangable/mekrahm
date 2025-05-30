@@ -30,7 +30,6 @@ public class ProductService {
 
     public ProductDTO save(ProductDTO dto) {
         Product entity = mapper.toEntity(dto);
-        entity.setId(null);
         return mapper.toDto(repository.save(entity));
     }
 
