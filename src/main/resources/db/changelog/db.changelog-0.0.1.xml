@@ -9,7 +9,11 @@
 
         <createTable tableName="product">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" />
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="resource_id" type="UUID">
+                <constraints nullable="false" unique="true"/>
             </column>
 
             <column name="ean" type="VARCHAR(20)">
@@ -20,6 +24,10 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <createIndex indexName="idx_product_uuid" tableName="product" unique="true">
+            <column name="resource_id"/>
+        </createIndex>
 
         <createIndex indexName="idx_product_ean" tableName="product" unique="true">
             <column name="ean"/>

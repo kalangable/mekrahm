@@ -3,10 +3,10 @@ package com.mekrahm.base.product;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
+public class ProductCreateDTO {
 
-    private String resourceId;
     private String ean;
+
     private String description;
 
 }

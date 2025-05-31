@@ -1,5 +1,6 @@
 package com.mekrahm.base.product.web;
 
+import com.mekrahm.base.product.ProductCreateDTO;
 import com.mekrahm.base.product.ProductDTO;
 import com.mekrahm.base.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,19 +27,22 @@ public class ProductController {
         return service.findAll();
     }
 
-    @GetMapping("/ean/{ean}")
-    public ResponseEntity<ProductDTO> findByEan(@PathVariable String ean) {
-        ProductDTO product = service.findByEan(ean);
+    @GetMapping("/{resourceId}")
+    public ResponseEntity<ProductDTO> findByEan(@PathVariable String resourceId) {
+        ProductDTO product = service.findByResourceId(resourceId);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product) {
-        return ResponseEntity.ok(service.save(product));
+    public ResponseEntity<ProductDTO> create(@RequestBody ProductCreateDTO product) {
+        ProductDTO created = service.save(product);
+        URI location = URI.create("/products/" + created.getResourceId());
+        return ResponseEntity.created(location).body(created);
     }
 
-/*    @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductDTO product) {
+
+    /*@PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
         return service.findById(id)
             .map(existing -> {
                 product.setId(id);
@@ -45,6 +50,7 @@ public class ProductController {
             })
             .orElse(ResponseEntity.notFound().build());
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

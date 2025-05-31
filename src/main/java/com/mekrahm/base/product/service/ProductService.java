@@ -1,5 +1,6 @@
 package com.mekrahm.base.product.service;
 
+import com.mekrahm.base.product.ProductCreateDTO;
 import com.mekrahm.base.product.ProductDTO;
 import com.mekrahm.base.product.mapper.ProductMapper;
 import com.mekrahm.base.product.persistence.Product;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +25,15 @@ public class ProductService {
             .toList();
     }
 
-    public ProductDTO findByEan(final String ean) {
-        return repository.findByEan(ean)
+    public ProductDTO findByResourceId(final String resourceId) {
+        final UUID uuid = UUID.fromString(resourceId);
+        return repository.findByResourceId(uuid)
             .map(mapper::toDto)
             .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
-    public ProductDTO save(ProductDTO dto) {
-        Product entity = mapper.toEntity(dto);
+    public ProductDTO save(ProductCreateDTO productCreateDTO) {
+        Product entity = mapper.toEntity(productCreateDTO);
         return mapper.toDto(repository.save(entity));
     }
 
