@@ -15,5 +15,6 @@ public interface ProductMapper {
 
     @Mapping(source = "ean", target = "ean")
     @Mapping(source = "description", target = "description")
+    @Mapping(target = "id", ignore = true)
     Product toEntity(ProductDTO dto);
 }

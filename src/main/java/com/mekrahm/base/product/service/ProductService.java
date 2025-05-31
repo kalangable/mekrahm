@@ -4,6 +4,7 @@ import com.mekrahm.base.product.ProductDTO;
 import com.mekrahm.base.product.mapper.ProductMapper;
 import com.mekrahm.base.product.persistence.Product;
 import com.mekrahm.base.product.persistence.ProductRepository;
+import com.mekrahm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,10 @@ public class ProductService {
             .toList();
     }
 
-    public ProductDTO findById(Long id) {
-        return repository.findById(id)
+    public ProductDTO findByEan(final String ean) {
+        return repository.findByEan(ean)
             .map(mapper::toDto)
-            .orElseThrow(() -> new RuntimeException("Product not found"));
+            .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
     public ProductDTO save(ProductDTO dto) {

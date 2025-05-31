@@ -25,9 +25,10 @@ public class ProductController {
         return service.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    @GetMapping("/ean/{ean}")
+    public ResponseEntity<ProductDTO> findByEan(@PathVariable String ean) {
+        ProductDTO product = service.findByEan(ean);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
