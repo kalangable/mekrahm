@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,20 +41,16 @@ public class ProductController {
         return ResponseEntity.created(location).body(created);
     }
 
-
-    /*@PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
-        return service.findById(id)
-            .map(existing -> {
-                product.setId(id);
-                return ResponseEntity.ok(service.save(product));
-            })
-            .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/{resourceId}")
+    public ResponseEntity<ProductDTO> update(@PathVariable String resourceId, @RequestBody ProductCreateDTO product) {
+        ProductDTO updated = service.update(resourceId, product);
+        URI location = URI.create("/products/" + updated.getResourceId());
+        return ResponseEntity.ok().location(location).body(updated);
     }
 
-
+    /*
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String resourceId) {
         return service.findById(id)
             .map(p -> {
                 service.delete(id);
