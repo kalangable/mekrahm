@@ -32,9 +32,8 @@ public class ProductController {
         return queryService.findAll();
     }
 
-    @GetMapping("/{identifier}")
-    public ResponseEntity<ProductDTO> findByResourceId(@PathVariable String identifier) {
-        UUID resourceId = UUID.fromString(identifier);
+    @GetMapping("/{resourceId}")
+    public ResponseEntity<ProductDTO> findByResourceId(@PathVariable UUID resourceId) {
         ProductDTO product = queryService.findByResourceId(resourceId);
         return ResponseEntity.ok(product);
     }
@@ -46,17 +45,15 @@ public class ProductController {
         return ResponseEntity.created(location).body(created);
     }
 
-    @PutMapping("/{identifier}")
-    public ResponseEntity<ProductDTO> update(@PathVariable String identifier, @RequestBody ProductCreateDTO product) {
-        UUID resourceId = UUID.fromString(identifier);
+    @PutMapping("/{resourceId}")
+    public ResponseEntity<ProductDTO> update(@PathVariable UUID resourceId, @RequestBody ProductCreateDTO product) {
         ProductDTO updated = commnadService.update(resourceId, product);
         URI location = URI.create("/products/" + updated.getResourceId());
         return ResponseEntity.ok().location(location).body(updated);
     }
 
-    @DeleteMapping("/{identifier}")
-    public ResponseEntity<Void> delete(@PathVariable String identifier) {
-        UUID resourceId = UUID.fromString(identifier);
+    @DeleteMapping("/{resourceId}")
+    public ResponseEntity<Void> delete(@PathVariable UUID resourceId) {
         commnadService.delete(resourceId);
         return ResponseEntity.noContent().<Void> build();
     }
