@@ -1,8 +1,8 @@
-package com.mekrahm.base.product.mapper;
+package com.mekrahm.base.product.internal;
 
 import com.mekrahm.base.product.ProductCreateDTO;
 import com.mekrahm.base.product.ProductDTO;
-import com.mekrahm.base.product.persistence.Product;
+import com.mekrahm.base.product.domain.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

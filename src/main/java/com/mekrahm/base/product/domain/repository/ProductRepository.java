@@ -1,5 +1,6 @@
-package com.mekrahm.base.product.persistence;
+package com.mekrahm.base.product.domain.repository;
 
+import com.mekrahm.base.product.domain.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

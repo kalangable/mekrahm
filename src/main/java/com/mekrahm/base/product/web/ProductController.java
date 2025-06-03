@@ -2,7 +2,8 @@ package com.mekrahm.base.product.web;
 
 import com.mekrahm.base.product.ProductCreateDTO;
 import com.mekrahm.base.product.ProductDTO;
-import com.mekrahm.base.product.service.ProductService;
+import com.mekrahm.base.product.service.ProductCommandService;
+import com.mekrahm.base.product.service.ProductQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,36 +23,37 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductService service;
+    private final ProductQueryService queryService;
+    private final ProductCommandService commnadService;
 
     @GetMapping
     public List<ProductDTO> getAll() {
-        return service.findAll();
+        return queryService.findAll();
     }
 
     @GetMapping("/{resourceId}")
     public ResponseEntity<ProductDTO> findByEan(@PathVariable String resourceId) {
-        ProductDTO product = service.findByResourceId(resourceId);
+        ProductDTO product = queryService.findByResourceId(resourceId);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
     public ResponseEntity<ProductDTO> create(@RequestBody ProductCreateDTO product) {
-        ProductDTO created = service.save(product);
+        ProductDTO created = commnadService.save(product);
         URI location = URI.create("/products/" + created.getResourceId());
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("/{resourceId}")
     public ResponseEntity<ProductDTO> update(@PathVariable String resourceId, @RequestBody ProductCreateDTO product) {
-        ProductDTO updated = service.update(resourceId, product);
+        ProductDTO updated = commnadService.update(resourceId, product);
         URI location = URI.create("/products/" + updated.getResourceId());
         return ResponseEntity.ok().location(location).body(updated);
     }
 
     @DeleteMapping("/{resourceId}")
     public ResponseEntity<Void> delete(@PathVariable String resourceId) {
-        service.delete(resourceId);
+        commnadService.delete(resourceId);
         return ResponseEntity.noContent().<Void> build();
     }
 }

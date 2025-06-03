@@ -1,4 +1,4 @@
-package com.mekrahm.base.product.persistence;
+package com.mekrahm.base.product.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
