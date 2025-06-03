@@ -29,10 +29,8 @@ public class ProductService {
     }
 
     public ProductDTO findByResourceId(final String resourceId) {
-        final UUID uuid = UUID.fromString(resourceId);
-        return repository.findByResourceId(uuid)
-            .map(mapper::toDto)
-            .orElseThrow(() -> new NotFoundException("Product not found"));
+        final Product product = findOrThrow(resourceId, "Product not found");
+        return mapper.toDto(product);
     }
 
     public ProductDTO save(ProductCreateDTO productCreateDTO) {
@@ -41,10 +39,7 @@ public class ProductService {
     }
 
     public ProductDTO update(final String resourceId, final ProductCreateDTO productCreateDTO) {
-        final UUID uuid = UUID.fromString(resourceId);
-
-        final Product product = repository.findByResourceId(uuid)
-            .orElseThrow(() -> new NotFoundException("Product not found to update"));
+        final Product product = findOrThrow(resourceId, "Product not found to update");
 
         boolean hasChanges = false;
 
@@ -68,7 +63,17 @@ public class ProductService {
         return mapper.toDto(savedProduct);
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void delete(final String resourceId) {
+
+        final Product product = findOrThrow(resourceId, "Product not found to delete");
+
+        repository.deleteById(product.getId());
+    }
+
+    private Product findOrThrow(final String resourceId, String message) {
+        final UUID uuid = UUID.fromString(resourceId);
+        final Product product = repository.findByResourceId(uuid)
+            .orElseThrow(() -> new NotFoundException(message));
+        return product;
     }
 }

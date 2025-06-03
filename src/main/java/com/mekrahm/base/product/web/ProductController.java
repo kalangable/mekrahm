@@ -5,6 +5,7 @@ import com.mekrahm.base.product.ProductDTO;
 import com.mekrahm.base.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,14 +49,9 @@ public class ProductController {
         return ResponseEntity.ok().location(location).body(updated);
     }
 
-    /*
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{resourceId}")
     public ResponseEntity<Void> delete(@PathVariable String resourceId) {
-        return service.findById(id)
-            .map(p -> {
-                service.delete(id);
-                return ResponseEntity.noContent().<Void> build();
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }*/
+        service.delete(resourceId);
+        return ResponseEntity.noContent().<Void> build();
+    }
 }
