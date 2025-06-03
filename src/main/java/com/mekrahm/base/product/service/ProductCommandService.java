@@ -26,7 +26,7 @@ public class ProductCommandService {
         return mapper.toDto(repository.saveWithEvent(entity));
     }
 
-    public ProductDTO update(final String resourceId, final ProductCreateDTO dto) {
+    public ProductDTO update(final UUID resourceId, final ProductCreateDTO dto) {
         final Product product = loadProductOrThrow(resourceId, "Product not found to update");
 
         boolean hasChanges = applyChanges(product, dto);
@@ -40,13 +40,13 @@ public class ProductCommandService {
         return mapper.toDto(savedProduct);
     }
 
-    public void delete(final String resourceId) {
+    public void delete(final UUID resourceId) {
         Product product = loadProductOrThrow(resourceId, "Product not found to delete");
         repository.deleteWithEvent(product);
     }
 
-    private Product loadProductOrThrow(final String resourceId, String message) {
-        return repository.findByResourceId(UUID.fromString(resourceId))
+    private Product loadProductOrThrow(final UUID resourceId, String message) {
+        return repository.findByResourceId(resourceId)
             .orElseThrow(() -> new NotFoundException(message));
     }
 

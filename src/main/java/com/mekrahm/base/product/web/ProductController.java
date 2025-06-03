@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,8 +32,9 @@ public class ProductController {
         return queryService.findAll();
     }
 
-    @GetMapping("/{resourceId}")
-    public ResponseEntity<ProductDTO> findByEan(@PathVariable String resourceId) {
+    @GetMapping("/{identifier}")
+    public ResponseEntity<ProductDTO> findByResourceId(@PathVariable String identifier) {
+        UUID resourceId = UUID.fromString(identifier);
         ProductDTO product = queryService.findByResourceId(resourceId);
         return ResponseEntity.ok(product);
     }
@@ -44,15 +46,17 @@ public class ProductController {
         return ResponseEntity.created(location).body(created);
     }
 
-    @PutMapping("/{resourceId}")
-    public ResponseEntity<ProductDTO> update(@PathVariable String resourceId, @RequestBody ProductCreateDTO product) {
+    @PutMapping("/{identifier}")
+    public ResponseEntity<ProductDTO> update(@PathVariable String identifier, @RequestBody ProductCreateDTO product) {
+        UUID resourceId = UUID.fromString(identifier);
         ProductDTO updated = commnadService.update(resourceId, product);
         URI location = URI.create("/products/" + updated.getResourceId());
         return ResponseEntity.ok().location(location).body(updated);
     }
 
-    @DeleteMapping("/{resourceId}")
-    public ResponseEntity<Void> delete(@PathVariable String resourceId) {
+    @DeleteMapping("/{identifier}")
+    public ResponseEntity<Void> delete(@PathVariable String identifier) {
+        UUID resourceId = UUID.fromString(identifier);
         commnadService.delete(resourceId);
         return ResponseEntity.noContent().<Void> build();
     }

@@ -6,6 +6,7 @@ import com.mekrahm.base.product.internal.ProductMapper;
 import com.mekrahm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +26,10 @@ public class ProductQueryService {
             .toList();
     }
 
-    public ProductDTO findByResourceId(final String resourceId) {
-        UUID id = UUID.fromString(resourceId);
-        return repository.findByResourceId(id)
+    @Cacheable(value = "productByResourceId", key = "#resourceId")
+    public ProductDTO findByResourceId(final UUID resourceId) {
+        log.info("Buscando info do produto {}", resourceId );
+        return repository.findByResourceId(resourceId)
             .map(mapper::toDto)
             .orElseThrow(() -> new NotFoundException("Product not found"));
     }
