@@ -28,7 +28,6 @@ public class ProductQueryService {
 
     @Cacheable(value = "productByResourceId", key = "#resourceId")
     public ProductDTO findByResourceId(final UUID resourceId) {
-        log.info("Buscando info do produto {}", resourceId );
         return repository.findByResourceId(resourceId)
             .map(mapper::toDto)
             .orElseThrow(() -> new NotFoundException("Product not found"));
