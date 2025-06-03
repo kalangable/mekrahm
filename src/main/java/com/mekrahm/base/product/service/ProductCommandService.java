@@ -23,7 +23,7 @@ public class ProductCommandService {
 
     public ProductDTO save(ProductCreateDTO productCreateDTO) {
         Product entity = mapper.toEntity(productCreateDTO);
-        return mapper.toDto(repository.save(entity));
+        return mapper.toDto(repository.saveWithEvent(entity));
     }
 
     public ProductDTO update(final String resourceId, final ProductCreateDTO dto) {
@@ -31,7 +31,7 @@ public class ProductCommandService {
 
         boolean hasChanges = applyChanges(product, dto);
 
-        Product savedProduct = hasChanges ? repository.save(product) : product;
+        Product savedProduct = hasChanges ? repository.saveWithEvent(product) : product;
 
         if (!hasChanges) {
             log.info("Same object, not updated");
@@ -42,7 +42,7 @@ public class ProductCommandService {
 
     public void delete(final String resourceId) {
         Product product = loadProductOrThrow(resourceId, "Product not found to delete");
-        repository.deleteById(product.getId());
+        repository.deleteWithEvent(product);
     }
 
     private Product loadProductOrThrow(final String resourceId, String message) {
