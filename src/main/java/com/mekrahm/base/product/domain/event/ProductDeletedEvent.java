@@ -1,13 +1,8 @@
 package com.mekrahm.base.product.domain.event;
 
-import com.mekrahm.base.product.domain.model.Product;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public class ProductDeletedEvent extends AbstractProductEvent {
 
-@Getter
-@RequiredArgsConstructor
-public class ProductDeletedEvent {
-
-    private final Product product;
-
+    public ProductDeletedEvent(ProductEvent productEvent) {
+        super(productEvent);
+    }
 }

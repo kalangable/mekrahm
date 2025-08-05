@@ -1,4 +1,4 @@
-package com.mekrahm.base.product.infrastructure;
+package com.mekrahm.base.product.infrastructure.event;
 
 import com.mekrahm.base.product.domain.event.ProductCreatedEvent;
 import com.mekrahm.base.product.domain.event.ProductDeletedEvent;
