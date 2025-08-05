@@ -1,12 +1,15 @@
 package com.mekrahm.base.product;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Data
-public class ProductDTO {
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+public class ProductDetails extends ProductPayload {
 
     private String resourceId;
-    private String ean;
-    private String description;
-
 }
