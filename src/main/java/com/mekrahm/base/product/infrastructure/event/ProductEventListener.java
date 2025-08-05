@@ -22,25 +22,25 @@ public class ProductEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductCreate(ProductCreatedEvent event) {
-        log.info("Produto salvo com sucesso: {}", event.getProduct().getEan());
+        log.info("Produto salvo com sucesso: {}", event.getProductEvent().resourceId());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductUpdated(ProductUpdatedEvent event) {
-        log.info("Produto Alterado com sucesso: {}", event.getProduct());
-        evictFromCache(event.getProduct().getResourceId());
+        log.info("Produto Alterado com sucesso: {}", event.getProductEvent());
+        evictFromCache(event.getProductEvent().resourceId());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductDeleted(ProductDeletedEvent event) {
-        log.info("Produto deletado com sucesso: {}", event.getProduct());
-        evictFromCache(event.getProduct().getResourceId());
+        log.info("Produto deletado com sucesso: {}", event.getProductEvent());
+        evictFromCache(event.getProductEvent().resourceId());
     }
 
-    private void evictFromCache(UUID resourceId) {
+    private void evictFromCache(String resourceId) {
         Cache cache = cacheManager.getCache("productByResourceId");
         if (cache != null) {
-            cache.evict(resourceId);
+            cache.evict(UUID.fromString(resourceId));
             log.info("Produto removido do cache: {}", resourceId);
         }
     }

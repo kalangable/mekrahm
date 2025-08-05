@@ -1,7 +1,7 @@
 package com.mekrahm.base.product.web;
 
-import com.mekrahm.base.product.ProductCreateDTO;
-import com.mekrahm.base.product.ProductDTO;
+import com.mekrahm.base.product.ProductPayload;
+import com.mekrahm.base.product.ProductDetails;
 import com.mekrahm.base.product.service.ProductCommandService;
 import com.mekrahm.base.product.service.ProductQueryService;
 import lombok.RequiredArgsConstructor;
@@ -25,36 +25,36 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductQueryService queryService;
-    private final ProductCommandService commnadService;
+    private final ProductCommandService commandService;
 
     @GetMapping
-    public List<ProductDTO> getAll() {
+    public List<ProductDetails> getAll() {
         return queryService.findAll();
     }
 
     @GetMapping("/{resourceId}")
-    public ResponseEntity<ProductDTO> findByResourceId(@PathVariable UUID resourceId) {
-        ProductDTO product = queryService.findByResourceId(resourceId);
+    public ResponseEntity<ProductDetails> findByResourceId(@PathVariable UUID resourceId) {
+        ProductDetails product = queryService.findByResourceId(resourceId);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> create(@RequestBody ProductCreateDTO product) {
-        ProductDTO created = commnadService.save(product);
+    public ResponseEntity<ProductDetails> create(@RequestBody ProductPayload product) {
+        ProductDetails created = commandService.save(product);
         URI location = URI.create("/products/" + created.getResourceId());
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("/{resourceId}")
-    public ResponseEntity<ProductDTO> update(@PathVariable UUID resourceId, @RequestBody ProductCreateDTO product) {
-        ProductDTO updated = commnadService.update(resourceId, product);
+    public ResponseEntity<ProductDetails> update(@PathVariable UUID resourceId, @RequestBody ProductPayload product) {
+        ProductDetails updated = commandService.update(resourceId, product);
         URI location = URI.create("/products/" + updated.getResourceId());
         return ResponseEntity.ok().location(location).body(updated);
     }
 
     @DeleteMapping("/{resourceId}")
     public ResponseEntity<Void> delete(@PathVariable UUID resourceId) {
-        commnadService.delete(resourceId);
+        commandService.delete(resourceId);
         return ResponseEntity.noContent().<Void> build();
     }
 }

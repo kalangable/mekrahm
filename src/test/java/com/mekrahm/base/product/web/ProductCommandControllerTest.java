@@ -1,8 +1,8 @@
 package com.mekrahm.base.product.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekrahm.base.product.ProductCreateDTO;
-import com.mekrahm.base.product.ProductDTO;
+import com.mekrahm.base.product.ProductPayload;
+import com.mekrahm.base.product.ProductDetails;
 import com.mekrahm.base.product.service.ProductCommandService;
 import com.mekrahm.base.product.service.ProductQueryService;
 import com.mekrahm.exception.NotFoundException;
@@ -52,21 +52,21 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     private UUID resourceId;
-    private ProductDTO productDTO;
-    private ProductCreateDTO createDTO;
+    private ProductDetails productDetails;
+    private ProductPayload createDTO;
 
     @BeforeEach
     void setup() {
         resourceId = UUID.randomUUID();
 
-        createDTO = new ProductCreateDTO();
+        createDTO = new ProductPayload();
         createDTO.setEan("7891234567890");
         createDTO.setDescription("Produto de Teste");
 
-        productDTO = new ProductDTO();
-        productDTO.setResourceId(resourceId.toString());
-        productDTO.setEan(createDTO.getEan());
-        productDTO.setDescription(createDTO.getDescription());
+        productDetails = new ProductDetails();
+        productDetails.setResourceId(resourceId.toString());
+        productDetails.setEan(createDTO.getEan());
+        productDetails.setDescription(createDTO.getDescription());
 
         // Reset mock behavior
         reset(queryService, commandService);
@@ -74,7 +74,7 @@ class ProductControllerTest {
 
     @Test
     void shouldReturnAllProducts() throws Exception {
-        when(queryService.findAll()).thenReturn(List.of(productDTO));
+        when(queryService.findAll()).thenReturn(List.of(productDetails));
 
         mockMvc.perform(get("/products"))
             .andExpect(status().isOk())
@@ -83,7 +83,7 @@ class ProductControllerTest {
 
     @Test
     void shouldReturnProductById() throws Exception {
-        when(queryService.findByResourceId(resourceId)).thenReturn(productDTO);
+        when(queryService.findByResourceId(resourceId)).thenReturn(productDetails);
 
         mockMvc.perform(get("/products/{id}", resourceId))
             .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class ProductControllerTest {
 
     @Test
     void shouldCreateProduct() throws Exception {
-        when(commandService.save(any(ProductCreateDTO.class))).thenReturn(productDTO);
+        when(commandService.save(any(ProductPayload.class))).thenReturn(productDetails);
 
         mockMvc.perform(post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ class ProductControllerTest {
 
     @Test
     void shouldUpdateProduct() throws Exception {
-        when(commandService.update(eq(resourceId), any(ProductCreateDTO.class))).thenReturn(productDTO);
+        when(commandService.update(eq(resourceId), any(ProductPayload.class))).thenReturn(productDetails);
 
         mockMvc.perform(put("/products/{id}", resourceId)
                 .contentType(MediaType.APPLICATION_JSON)
