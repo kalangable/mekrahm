@@ -13,9 +13,10 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductRepositoryImpl implements ProductRepository {
+public class ProductPersistenceAdapter implements ProductRepository {
 
     private final EntityManager entityManager;
+
     private final ProductEventDispatcher productEventDispatcher;
 
     private final JpaProductRepository jpa;

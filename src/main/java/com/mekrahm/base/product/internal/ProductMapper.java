@@ -1,7 +1,8 @@
 package com.mekrahm.base.product.internal;
 
-import com.mekrahm.base.product.ProductCreateDTO;
-import com.mekrahm.base.product.ProductDTO;
+import com.mekrahm.base.product.ProductDetails;
+import com.mekrahm.base.product.ProductPayload;
+import com.mekrahm.base.product.domain.event.ProductEvent;
 import com.mekrahm.base.product.domain.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,11 +10,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    ProductDTO toDto(Product entity);
+    ProductDetails toDto(Product product);
 
     @Mapping(target = "id", ignore = true)
-    Product toEntity(ProductDTO dto);
+    Product toEntity(ProductDetails productDetails);
 
     @Mapping(target = "id", ignore = true)
-    Product toEntity(ProductCreateDTO productCreateDTO);
+    Product toEntity(ProductPayload productPayload);
+
+    ProductEvent toEvent(Product product);
 }
