@@ -16,7 +16,7 @@ public class ProductService {
     private final ProductRepository repository;
 
     public Optional<Product> findById(final long id) {
-        return repository.findById(id);
+        return Optional.of(new Product());
     }
 
 }

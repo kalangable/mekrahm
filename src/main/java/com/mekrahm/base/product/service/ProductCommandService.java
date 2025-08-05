@@ -1,16 +1,16 @@
 package com.mekrahm.base.product.service;
 
-import com.mekrahm.base.product.ProductCreateDTO;
-import com.mekrahm.base.product.ProductDTO;
+import com.mekrahm.base.product.ProductDetails;
+import com.mekrahm.base.product.ProductPayload;
 import com.mekrahm.base.product.domain.model.Product;
 import com.mekrahm.base.product.domain.repository.ProductRepository;
 import com.mekrahm.base.product.internal.ProductMapper;
+import com.mekrahm.base.product.internal.ProductUpdater;
 import com.mekrahm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -19,51 +19,38 @@ import java.util.UUID;
 public class ProductCommandService {
 
     private final ProductRepository repository;
+
     private final ProductMapper mapper;
 
-    public ProductDTO save(ProductCreateDTO productCreateDTO) {
-        Product entity = mapper.toEntity(productCreateDTO);
-        return mapper.toDto(repository.saveWithEvent(entity));
+    private final ProductUpdater updater;
+
+    public ProductDetails save(ProductPayload productPayload) {
+        Product entity = mapper.toEntity(productPayload);
+        return mapper.toDto(repository.persist(entity));
     }
 
-    public ProductDTO update(final UUID resourceId, final ProductCreateDTO dto) {
-        final Product product = loadProductOrThrow(resourceId, "Product not found to update");
+    public ProductDetails update(UUID resourceId, ProductPayload productPayload) {
+        Product product = getProductOrThrow(resourceId, "Product not found to update");
 
-        boolean hasChanges = applyChanges(product, dto);
+        boolean hasChanges = updater.applyChanges(product, productPayload);
 
-        Product savedProduct = hasChanges ? repository.saveWithEvent(product) : product;
+        Product savedProduct = hasChanges ? repository.persist(product) : product;
 
         if (!hasChanges) {
-            log.info("Same object, not updated");
+            log.debug("No changes detected for product with resourceId={}", resourceId);
         }
 
         return mapper.toDto(savedProduct);
     }
 
     public void delete(final UUID resourceId) {
-        Product product = loadProductOrThrow(resourceId, "Product not found to delete");
-        repository.deleteWithEvent(product);
+        Product product = getProductOrThrow(resourceId, "Product not found to delete");
+        repository.purge(product);
     }
 
-    private Product loadProductOrThrow(final UUID resourceId, String message) {
+    private Product getProductOrThrow(final UUID resourceId, String message) {
         return repository.findByResourceId(resourceId)
             .orElseThrow(() -> new NotFoundException(message));
-    }
-
-    private boolean applyChanges(Product product, ProductCreateDTO dto) {
-        boolean updated = false;
-
-        if (!Objects.equals(product.getEan(), dto.getEan())) {
-            product.setEan(dto.getEan());
-            updated = true;
-        }
-
-        if (!Objects.equals(product.getDescription(), dto.getDescription())) {
-            product.setDescription(dto.getDescription());
-            updated = true;
-        }
-
-        return updated;
     }
 
 }

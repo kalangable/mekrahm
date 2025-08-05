@@ -1,6 +1,6 @@
 package com.mekrahm.base.product.service;
 
-import com.mekrahm.base.product.ProductDTO;
+import com.mekrahm.base.product.ProductDetails;
 import com.mekrahm.base.product.domain.repository.ProductRepository;
 import com.mekrahm.base.product.internal.ProductMapper;
 import com.mekrahm.exception.NotFoundException;
@@ -20,14 +20,14 @@ public class ProductQueryService {
     private final ProductRepository repository;
     private final ProductMapper mapper;
 
-    public List<ProductDTO> findAll() {
+    public List<ProductDetails> findAll() {
         return repository.findAll().stream()
             .map(mapper::toDto)
             .toList();
     }
 
     @Cacheable(value = "productByResourceId", key = "#resourceId")
-    public ProductDTO findByResourceId(final UUID resourceId) {
+    public ProductDetails findByResourceId(final UUID resourceId) {
         return repository.findByResourceId(resourceId)
             .map(mapper::toDto)
             .orElseThrow(() -> new NotFoundException("Product not found"));
